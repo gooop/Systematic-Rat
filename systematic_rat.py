@@ -20,7 +20,7 @@ async def on_ready():
         print(f'{guild.name} (id: {guild.id})')
 
 
-# Commands
+# ==== Commands ====
 @client.command(name='hello',
                 help='Systematic rat is here to help!',
                 brief='Says hello.')
@@ -50,6 +50,7 @@ async def multipoll(context,
 async def poll(context, 
                 ping : typing.Optional[bool],
                 duration_days : typing.Optional[int],
+                *,
                 message : str):
     # Delete command from user and log
     author = context.message.author
@@ -93,5 +94,5 @@ async def ratspin(context):
 
     
 
-# Run bot
+# ==== Run bot ====
 client.run(TOKEN)
