@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands     
+import typing
 
 # Get token from current directory
 TOKEN = ''
@@ -14,27 +15,59 @@ client = commands.Bot(command_prefix='!', intents=intents)
 # List servers bot is connected to
 @client.event
 async def on_ready():
+    print(f'\n{client.user} is connected to the following guilds:')
     for guild in client.guilds:
-        print(
-   
-        f'{guild.name}(id: {guild.id})'
-        )
+        print(f'{guild.name} (id: {guild.id})')
 
 
 # Commands
-@client.command(name='hello')
+@client.command(name='hello',
+                help='Systematic rat is here to help!',
+                brief='Says hello.')
 async def hello(context):
-    """Says hello."""
     await context.send("Hello, ratlings! I am here to take your jobs.")
-    
-# @client.command(name='makeeventpoll')
-# async def makeeventpoll(context, *args):
-    # if 'name' in args:
-        
 
-@client.command(name='ratspin')
+
+@client.command(name='multipoll',
+                help='Makes a poll with multiple options (NOT IMPLEMENTED)',
+                brief='Makes a poll with multiple options (NOT IMPLEMENTED)')
+async def multipoll(context, 
+                    ping : typing.Optional[bool],
+                    duration_days : typing.Optional[int],
+                    message : str,
+                    *args):
+    #TODO: include args that can be used in !help
+    """Makes a poll with multiple options (NOT IMPLEMENTED)"""
+
+
+@client.command(name='poll',
+                help="Makes a poll with two options",
+                brief="Makes a poll with two options",
+                usage='!poll <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message: string>')
+async def poll(context, 
+                ping : typing.Optional[bool],
+                duration_days : typing.Optional[int],
+                message : str):
+    # Blank message error
+    if message == '':
+        await context.send('Usage: !poll <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message>')
+        return
+    
+    # Send message
+    if ping:
+        msg = await context.send(message + '\n@everyone')
+    else:
+        msg = await context.send(message)
+    
+    # Set up for poll
+    await msg.add_reaction("👍")
+    await msg.add_reaction("👎")
+
+
+@client.command(name='ratspin',
+                help='Uploads an image of a spinning rat or falls back onto pasting a URL',
+                brief='SPEEN')
 async def ratspin(context):
-    """SPEEN"""
     try:
         with open('rat-spinning.gif', 'rb') as f:
             picture = discord.File(f)
