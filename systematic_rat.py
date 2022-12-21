@@ -37,7 +37,10 @@ async def multipoll(context,
                     message : str,
                     *args):
     #TODO: include args that can be used in !help
-    """Makes a poll with multiple options (NOT IMPLEMENTED)"""
+    # Delete command from user and log
+    author = context.message.author
+    print(f'!poll called by {author}')
+    await context.message.delete()
 
 
 @client.command(name='poll',
@@ -48,6 +51,11 @@ async def poll(context,
                 ping : typing.Optional[bool],
                 duration_days : typing.Optional[int],
                 message : str):
+    # Delete command from user and log
+    author = context.message.author
+    print(f'!poll called by {author}')
+    await context.message.delete()
+    
     # Blank message error
     if message == '':
         await context.send('Usage: !poll <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message>')
@@ -55,9 +63,9 @@ async def poll(context,
     
     # Send message
     if ping:
-        msg = await context.send(message + '\n@everyone')
+        msg = await context.send(f'**POLL:** \n{message} \n@everyone')
     else:
-        msg = await context.send(message)
+        msg = await context.send(f'**POLL:** \n{message}')
     
     # Set up for poll
     await msg.add_reaction("👍")
@@ -68,10 +76,17 @@ async def poll(context,
                 help='Uploads an image of a spinning rat or falls back onto pasting a URL',
                 brief='SPEEN')
 async def ratspin(context):
+    # Delete command from user and log
+    author = context.message.author
+    print(f'!ratspin called by {author}')
+    author = str(author).split('#')[0]
+    await context.message.delete()
+
+    # Try to upload, if that fails, paste URL
     try:
         with open('rat-spinning.gif', 'rb') as f:
             picture = discord.File(f)
-            await context.send(file=picture)
+            await context.send(f'{author} says SPEEN', file=picture)
     except:
         image_url = "https://media.tenor.com/aaEMtGfZFbkAAAAi/rat-spinning.gif'"
         await context.send(image_url)
