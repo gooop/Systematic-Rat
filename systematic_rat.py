@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands     
 import typing
+import random
 
 # Get token from current directory
 TOKEN = ''
@@ -30,7 +31,8 @@ async def hello(context):
 
 @client.command(name='multipoll',
                 help='Makes a poll with multiple options (NOT IMPLEMENTED)',
-                brief='Makes a poll with multiple options (NOT IMPLEMENTED)')
+                brief='Makes a poll with multiple options (NOT IMPLEMENTED)',
+                usage='!poll <ping: 1 | 0 | > <options: int (default 2)> <title: "string"> <optionN: "string">')
 async def multipoll(context, 
                     ping : typing.Optional[bool],
                     duration_days : typing.Optional[int],
@@ -87,10 +89,38 @@ async def ratspin(context):
     try:
         with open('rat-spinning.gif', 'rb') as f:
             picture = discord.File(f)
-            await context.send(f'{author} says SPEEN', file=picture)
+            await context.send(f'{author} says: SPEEN', file=picture)
     except:
         image_url = "https://media.tenor.com/aaEMtGfZFbkAAAAi/rat-spinning.gif'"
         await context.send(image_url)
+
+
+@client.command(name='ratcum',
+                hidden=True,
+                brief='What will you get??')
+async def ratcum(context):
+    # Delete command from user and log
+    author = context.message.author
+    print(f'!ratcum called by {author}')
+    author = str(author).split('#')[0]
+    await context.message.delete()
+
+    # Try to upload, if that fails, paste URL
+    try:
+        rand_int = random.randint(0, 1)
+        if rand_int == 0:
+            with open('Top_Rat.jpg', 'rb') as f:
+                picture = discord.File(f)
+                picture.filename = f'SPOILER_{picture.filename}'
+                await context.send(f'{author} says: ~uuhhnnh~', file=picture)
+        if rand_int == 1:
+            with open('Bottom_Rat.jpg', 'rb') as f:
+                picture = discord.File(f)
+                picture.filename = f'SPOILER_{picture.filename}'
+                await context.send(f'{author} says: ~uuhhnnh~', file=picture)
+
+    except:
+            await context.send('Error: Rat could not finish')
 
     
 
