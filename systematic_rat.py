@@ -30,19 +30,36 @@ async def hello(context):
 
 
 @client.command(name='multipoll',
-                help='Makes a poll with multiple options (NOT IMPLEMENTED)',
-                brief='Makes a poll with multiple options (NOT IMPLEMENTED)',
-                usage='!poll <ping: 1 | 0 | > <options: int (default 2)> <title: "string"> <optionN: "string">')
+                help='Makes a poll with multiple options',
+                brief='Makes a poll with multiple options',
+                usage='Usage: !multipoll <options_num: [1, 10]> <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message>')
 async def multipoll(context, 
+                    options_num : int,
                     ping : typing.Optional[bool],
                     duration_days : typing.Optional[int],
-                    message : str,
-                    *args):
+                    *,
+                    message : str):
     #TODO: include args that can be used in !help
     # Delete command from user and log
     author = context.message.author
-    print(f'!poll called by {author}')
+    print(f'!multipoll called by {author}')
     await context.message.delete()
+
+    # Blank message error
+    if message == '':
+        await context.send('Usage: !multipoll <options_num: [1, 10]> <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message>')
+        return
+    
+    # Send message
+    if ping:
+        msg = await context.send(f'**POLL:** \n{message} \nsent by {author}. @everyone')
+    else:
+        msg = await context.send(f'**POLL:** \n{message} \nsent by {author}.')
+    
+    emoji_list = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '6️⃣', '7️⃣', '8️⃣', '9️⃣', '🔟']
+
+    for i in range(options_num):
+        await msg.add_reaction(emoji_list[i])
 
 
 @client.command(name='poll',
@@ -66,13 +83,48 @@ async def poll(context,
     
     # Send message
     if ping:
-        msg = await context.send(f'**POLL:** \n{message} \n@everyone')
+        msg = await context.send(f'**POLL:** \n{message} \nsent by {author}. @everyone')
     else:
-        msg = await context.send(f'**POLL:** \n{message}')
+        msg = await context.send(f'**POLL:** \n{message} \nsent by {author}.')
     
     # Set up for poll
     await msg.add_reaction("👍")
     await msg.add_reaction("👎")
+
+@client.command(name='schedule',
+                help="Makes a post with multiple options for scheduling",
+                brief="Makes a post with multiple options for scheduling",
+                usage='!schedule <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message: string>')
+async def poll(context, 
+                ping : typing.Optional[bool],
+                duration_days : typing.Optional[int],
+                *,
+                message : str):
+    #TODO: Extend to create an event after x number of days/seconds or whatever
+    # Delete command from user and log
+    author = context.message.author
+    print(f'!schedule called by {author}')
+    await context.message.delete()
+    
+    # Blank message error
+    if message == '':
+        await context.send('Usage: !schedule <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message>')
+        return
+    
+    # Send message
+    if ping:
+        msg = await context.send(f'**EVENT:** \n{message} \nsent by {author}. @everyone')
+    else:
+        msg = await context.send(f'**EVENT:** \n{message} \nsent by {author}.')
+    
+    # Set up for poll
+    await msg.add_reaction("🇸")
+    await msg.add_reaction("🇺")
+    await msg.add_reaction("🇲")
+    await msg.add_reaction("🇹")
+    await msg.add_reaction("🇼")
+    await msg.add_reaction("🇷")
+    await msg.add_reaction("🇫")
 
 
 @client.command(name='ratspin',
