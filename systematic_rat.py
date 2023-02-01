@@ -95,7 +95,7 @@ async def poll(context,
                 help="Makes a post with multiple options for scheduling",
                 brief="Makes a post with multiple options for scheduling",
                 usage='!schedule <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message: string>')
-async def poll(context, 
+async def schedule(context, 
                 ping : typing.Optional[bool],
                 duration_days : typing.Optional[int],
                 *,
