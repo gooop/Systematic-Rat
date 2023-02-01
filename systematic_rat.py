@@ -3,6 +3,8 @@ from discord.ext import commands
 import typing
 import random
 
+
+# ==== Setup ====
 # Get token from current directory
 TOKEN = ''
 with open('token.txt', 'rt') as f:
