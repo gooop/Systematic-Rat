@@ -31,6 +31,30 @@ async def hello(context):
     await context.send("Hello, ratlings! I am here to take your jobs.")
 
 
+@client.command(name='announce',
+                help='Announce something!',
+                brief='Announce something!')
+async def multipoll(context, 
+                    ping : typing.Optional[bool],
+                    *,
+                    message : str):
+    # Delete command from user and log
+    author = context.message.author
+    print(f'!announce called by {author}')
+    await context.message.delete()
+
+    # Blank message error
+    if message == '':
+        await context.send('Usage: !announce <ping: 1 | 0 | > <message>')
+        return
+    
+    # Send message
+    if ping:
+        msg = await context.send(f'**📢📢📢 ANNOUNCEMENT 📢📢📢** \n{message} \nsent by {author}. @everyone')
+    else:
+        msg = await context.send(f'**POLL:** \n{message} \nsent by {author}.')
+
+
 @client.command(name='multipoll',
                 help='Makes a poll with multiple options',
                 brief='Makes a poll with multiple options',
@@ -92,6 +116,7 @@ async def poll(context,
     # Set up for poll
     await msg.add_reaction("👍")
     await msg.add_reaction("👎")
+
 
 @client.command(name='schedule',
                 help="Makes a post with multiple options for scheduling",
