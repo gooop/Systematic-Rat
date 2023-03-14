@@ -8,6 +8,7 @@
  4. !poll - Create a poll
  5. !multipoll - Create a poll with up to 10 options
  6. !schedule - Create a poll with weekdays as options
+ 7. !announce - Create an announcement
  
 ## Planned Updates
  1. Event creator/organizer
