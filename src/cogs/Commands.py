@@ -13,10 +13,11 @@ class Commands(commands.Cog):
     async def hello(self, context):
         await context.send("Hello, ratlings! I am here to take your jobs.")
 
+
     @commands.command(name='announce',
                     help='Announce something!',
                     brief='Announce something!')
-    async def multipoll(self,
+    async def announce(self,
                         context, 
                         ping : typing.Optional[bool],
                         *,
@@ -38,12 +39,12 @@ class Commands(commands.Cog):
             msg = await context.send(f'**POLL:** \n{message} \nsent by {author}.')
 
 
-    @commands.command(self,
-                    name='multipoll',
+    @commands.command(name='multipoll',
                     help='Makes a poll with multiple options',
                     brief='Makes a poll with multiple options',
                     usage='Usage: !multipoll <options_num: [1, 10]> <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message>')
-    async def multipoll(context, 
+    async def multipoll(self,
+                        context, 
                         options_num : int,
                         ping : typing.Optional[bool],
                         duration_days : typing.Optional[int],
@@ -72,12 +73,12 @@ class Commands(commands.Cog):
             await msg.add_reaction(emoji_list[i])
 
 
-    @commands.command(self,
-                    name='poll',
+    @commands.command(name='poll',
                     help="Makes a poll with two options",
                     brief="Makes a poll with two options",
                     usage='!poll <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message: string>')
-    async def poll(context, 
+    async def poll(self,
+                    context, 
                     ping : typing.Optional[bool],
                     duration_days : typing.Optional[int],
                     *,
@@ -103,12 +104,12 @@ class Commands(commands.Cog):
         await msg.add_reaction("👎")
 
 
-    @commands.command(self,
-                    name='schedule',
+    @commands.command(name='schedule',
                     help="Makes a post with multiple options for scheduling",
                     brief="Makes a post with multiple options for scheduling",
                     usage='!schedule <ping: 1 | 0 | > <duration_days: NOT IMPLEMENTED> <message: string>')
-    async def schedule(context, 
+    async def schedule(self,
+                    context, 
                     ping : typing.Optional[bool],
                     duration_days : typing.Optional[int],
                     *,
@@ -140,11 +141,10 @@ class Commands(commands.Cog):
         await msg.add_reaction("🇫")
 
 
-    @commands.command(self,
-                    name='ratspin',
+    @commands.command(name='ratspin',
                     help='Uploads an image of a spinning rat or falls back onto pasting a URL',
                     brief='SPEEN')
-    async def ratspin(context):
+    async def ratspin(self, context):
         # Delete command from user and log
         author = context.message.author
         print(f'!ratspin called by {author}')
@@ -161,11 +161,10 @@ class Commands(commands.Cog):
             await context.send(image_url)
 
 
-    @commands.command(self,
-                    name='ratcum',
+    @commands.command(name='ratcum',
                     hidden=True,
                     brief='What will you get??')
-    async def ratcum(context):
+    async def ratcum(self, context):
         # Delete command from user and log
         author = context.message.author
         print(f'!ratcum called by {author}')
