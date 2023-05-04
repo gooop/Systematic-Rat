@@ -2,12 +2,14 @@ import discord
 from discord.ext import commands     
 import typing
 import random
+import asyncio
+import os
 
 
 # ==== Setup ====
 # Get token from current directory
 TOKEN = ''
-with open('token.txt', 'rt') as f:
+with open('../token.txt', 'rt') as f:
     TOKEN = f.read()
     f.close()
 
@@ -24,11 +26,10 @@ async def on_ready():
 
 
 # ==== Commands ====
-@client.command(name='hello',
-                help='Systematic rat is here to help!',
-                brief='Says hello.')
-async def hello(context):
-    await context.send("Hello, ratlings! I am here to take your jobs.")
+async def load_cogs():
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            await client.load_extension(f'cogs.{filename[:-3]}')
 
 
 @client.command(name='announce',
@@ -208,5 +209,9 @@ async def ratcum(context):
 
     
 
-# ==== Run bot ====
-client.run(TOKEN)
+# ==== Main ====
+async def main():
+    await load_cogs()
+    await client.start(TOKEN)
+
+asyncio.run(main())
