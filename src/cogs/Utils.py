@@ -37,7 +37,7 @@ class Utils(commands.Cog):
         if ping:
             msg = await context.send(f'**📢📢📢 ANNOUNCEMENT 📢📢📢** \n{message} \nsent by {author}. @everyone')
         else:
-            msg = await context.send(f'**POLL:** \n{message} \nsent by {author}.')
+            msg = await context.send(f'**📢📢📢 ANNOUNCEMENT 📢📢📢** \n{message} \nsent by {author}.')
 
 
     @commands.command(name='multipoll',
