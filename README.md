@@ -13,7 +13,5 @@
 ## Planned Updates
  1. Event creator/organizer
  2. Email integration (spam the Rat's discord server with emails from Japan)
- 3. Spotify integration
-    a. Ability to convert threads into Spotify playlists with command
-    b. Any song links in the thread will be added to the playlist
+ 3. Spotify integration with ability to convert threads into Spotify playlists with command: Any song links in the thread will be added to the playlist.
  4. Config to enable/disable features
