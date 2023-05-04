@@ -143,4 +143,4 @@ class Utils(commands.cog):
 
 
 async def setup(bot):
-    await bot.add_cog(Fun(bot))
+    await bot.add_cog(Utils(bot))
