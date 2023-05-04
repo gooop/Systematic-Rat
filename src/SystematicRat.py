@@ -1,10 +1,12 @@
 import discord
-from discord.ext import commands     
-import typing
-import random
+from discord.ext import commands
 import asyncio
 import os
+import sys
 
+# ==== Helpers ====
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 # ==== Setup ====
 # Get token from current directory
@@ -29,8 +31,13 @@ async def on_ready():
 async def load_cogs():
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
-            await bot.load_extension(f'cogs.{filename[:-3]}')
-    
+            try:
+                await bot.load_extension(f'cogs.{filename[:-3]}')
+                print(f'- Loaded cog: {filename[:-3]}')
+            except Exception as e:
+                eprint(f'- Failed to load cog: {filename[:-3]}')
+                eprint(e)
+
 
 # ==== Main ====
 async def main():
