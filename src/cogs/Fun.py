@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands     
-import typing
 import random
 
 class Fun(commands.Cog):
