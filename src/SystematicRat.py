@@ -22,9 +22,9 @@ bot = commands.Bot(command_prefix='!', intents=intents)
 # List servers bot is connected to
 @bot.event
 async def on_ready():
-    print(f'\n{bot.user} is connected to the following servers:')
+    print(f'\n- {bot.user} is connected to the following servers:')
     for guild in bot.guilds:
-        print(f'{guild.name} (id: {guild.id})')
+        print(f'\t{guild.name} (id: {guild.id})')
 
 
 # ==== Import cogs ====
