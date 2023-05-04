@@ -13,7 +13,7 @@ class Fun(commands.Cog):
     async def ratspin(self, context):
         # Delete command from user and log
         author = context.message.author
-        print(f'!ratspin called by {author}')
+        print(f'- [Fun] !ratspin called by {author}')
         author = str(author).split('#')[0]
         await context.message.delete()
 
@@ -33,7 +33,7 @@ class Fun(commands.Cog):
     async def ratcum(self, context):
         # Delete command from user and log
         author = context.message.author
-        print(f'!ratcum called by {author}')
+        print(f'- [Fun] !ratcum called by {author}')
         author = str(author).split('#')[0]
         await context.message.delete()
 

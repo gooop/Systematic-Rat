@@ -24,7 +24,7 @@ class Utils(commands.Cog):
                         message : str):
         # Delete command from user and log
         author = context.message.author
-        print(f'!announce called by {author}')
+        print(f'- [Utils] !announce called by {author}')
         await context.message.delete()
 
         # Blank message error
@@ -53,7 +53,7 @@ class Utils(commands.Cog):
         #TODO: include args that can be used in !help
         # Delete command from user and log
         author = context.message.author
-        print(f'!multipoll called by {author}')
+        print(f'- [Utils] !multipoll called by {author}')
         await context.message.delete()
 
         # Blank message error
@@ -85,7 +85,7 @@ class Utils(commands.Cog):
                     message : str):
         # Delete command from user and log
         author = context.message.author
-        print(f'!poll called by {author}')
+        print(f'- [Utils] !poll called by {author}')
         await context.message.delete()
         
         # Blank message error
@@ -117,7 +117,7 @@ class Utils(commands.Cog):
         #TODO: Extend to create an event after x number of days/seconds or whatever
         # Delete command from user and log
         author = context.message.author
-        print(f'!schedule called by {author}')
+        print(f'- [Utils] !schedule called by {author}')
         await context.message.delete()
         
         # Blank message error
