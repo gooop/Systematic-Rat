@@ -16,7 +16,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='announce',
                     help='Announce something!',
-                    brief='Announce something!'
+                    brief='Announce something!',
                     usage='Usage: !announce <ping: 1 | 0 | > <message>')
     async def announce(self,
                         context, 
