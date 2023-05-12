@@ -14,7 +14,11 @@ class Helpers:
     @staticmethod
     def open_file(filename):
         """A simple function to return the contents of a file"""
-        with open(filename, 'rt') as f:
-            contents = f.read()
-            f.close()
+        try:
+            with open(filename, 'rt') as f:
+                contents = f.read()
+                f.close()
+        except Exception as e:
+            print(f"Error in open_file: {e}")
+            return ''
         return contents
