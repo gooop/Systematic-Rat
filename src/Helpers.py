@@ -9,6 +9,8 @@ Copyright 2023 Gavin Castaneda
 """
 
 # ==== Includes ====
+from cryptography.fernet import Fernet
+
 
 class Helpers:
     @staticmethod
@@ -22,3 +24,16 @@ class Helpers:
             print(f"Error in open_file: {e}")
             return ''
         return contents
+    
+    @staticmethod
+    def write_file(filename, contents, overwrite=True):
+        """A simple function to write to a file"""
+        try:
+            with open(filename, 'wb') as f:
+                f.write(contents)
+        except Exception as e:
+            print(f"Error in write_file: {e}")
+    
+    @staticmethod
+    def generate_email_key():
+        """A function to generate a key to store the email and password locally"""
