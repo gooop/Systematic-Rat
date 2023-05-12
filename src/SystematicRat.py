@@ -11,7 +11,11 @@ def eprint(*args, **kwargs):
 
 # ==== Setup ====
 # Get token from current directory
-TOKEN = hp.open_file('../token.txt')
+try:
+    TOKEN = hp.open_file('../token.txt')
+except Exception as e:
+    print(f"Error getting token: {e} \n You may need to make a token.txt.")
+    exit(-1)
 
 # Manage intents and connect to discord
 intents = discord.Intents.all()
