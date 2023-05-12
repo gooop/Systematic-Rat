@@ -22,18 +22,30 @@ class Helpers:
                 f.close()
         except Exception as e:
             print(f"Error in open_file: {e}")
-            return ''
+            raise e
         return contents
     
     @staticmethod
     def write_file(filename, contents, overwrite=True):
         """A simple function to write to a file"""
-        try:
-            with open(filename, 'wb') as f:
-                f.write(contents)
-        except Exception as e:
-            print(f"Error in write_file: {e}")
+        if overwrite:
+            try:
+                with open(filename, 'wb') as f:
+                    f.write(contents)
+            except Exception as e:
+                print(f"Error in write_file: {e}")
+                raise e
+        else:
+            try:
+                with open(filename, 'a') as f:
+                    f.write(contents)
+            except Exception as e:
+                print(f"Error in write_file: {e}")
+                raise e
+
     
     @staticmethod
-    def generate_email_key():
+    def generate_email_key(key_filename, email_filename):
         """A function to generate a key to store the email and password locally"""
+        key = Fernet.generate_key()
+        write_file(key_filename)
