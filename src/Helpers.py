@@ -32,6 +32,11 @@ class Helpers:
             try:
                 with open(filename, 'wb') as f:
                     f.write(contents)
+                    f.close()
+            except TypeError:
+                with open(filename, 'w') as f:
+                    f.write(contents)
+                    f.close()
             except Exception as e:
                 print(f"Error in write_file: {e}")
                 raise e
@@ -39,13 +44,7 @@ class Helpers:
             try:
                 with open(filename, 'a') as f:
                     f.write(contents)
+                    f.close()
             except Exception as e:
                 print(f"Error in write_file: {e}")
                 raise e
-
-    
-    @staticmethod
-    def generate_email_key(key_filename, email_filename):
-        """A function to generate a key to store the email and password locally"""
-        key = Fernet.generate_key()
-        write_file(key_filename)

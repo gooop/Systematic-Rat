@@ -9,34 +9,64 @@ Copyright 2023 Gavin Castaneda
 """
 
 # ==== Includes ====
-import imaplib
-import email
+import os
 from Helpers import Helpers as hp
-from cryptography.fernet import Fernet
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 
-# ==== Setup ====
-# Connect to the Gmail IMAP server
-mail = imaplib.IMAP4_SSL('imap.gmail.com')
 
-# Setup cypher for email/password
-KEY = hp.open_file('../key.txt')
+class Email:
+    # ==== Init ====
+    def __init__(self):
+        self.setup_mailbox()
 
-cipher_suite = Fernet(KEY)
+    # ==== Member Variables ====
+    SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
-# Read in encrypted text
-encrypted_email = ''
-encrypted_password = ''
-with open('../email.txt', 'rt') as f:
-    lines = f.readlines()
-    encrypted_email = lines[0].strip()
-    encrypted_password = lines[1].strip()
-    f.close()
+    # ==== Methods ====
+    def setup_mailbox(self):
+        """Sets up credentials for Gmail API"""
+        # Begin: Lifted from quickstart.py on https://developers.google.com/gmail/api/quickstart/python
+        creds = None
+        # The file token.json stores the user's access and refresh tokens, and is
+        # created automatically when the authorization flow completes for the first
+        # time.
+        if os.path.exists('token.json'):
+            creds = Credentials.from_authorized_user_file('token.json', self.SCOPES)
+        # If there are no (valid) credentials available, let the user log in.
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    '..\credentials.json', self.SCOPES)
+                creds = flow.run_local_server(port=0)
+            # Save the credentials for the next run
+            with open('token.json', 'w') as token:
+                token.write(creds.to_json())
+        # End: Lifted from quickstart.py on https://developers.google.com/gmail/api/quickstart/python
 
-# Decrypt
-EMAIL = cipher_suite.decrypt(encrypted_email)
-PASSWORD = cipher_suite.decrypt(encrypted_password)
+        # Begin: code written by Gavin
+        try:
+            # Call the Gmail API
+            mailbox = build('gmail', 'v1', credentials=creds)
+        except HttpError as e:
+            print(f'Error in setup_credentials: {e}')
+        
+        return mailbox
 
-# Login to email
-mail.login(EMAIL, PASSWORD)
+    def get_emails(self):
+        """Checks for, and returns a list of new emails"""
+        return []
 
-mail.select('inbox')
+
+def main():
+    email = Email()
+    list = email.get_emails()
+    
+
+if __name__ == '__main__':
+    main()
