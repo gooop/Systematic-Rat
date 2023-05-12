@@ -11,6 +11,7 @@ Copyright 2023 Gavin Castaneda
 # ==== Includes ====
 import imaplib
 import email
+from Helpers import Helpers as hp
 from cryptography.fernet import Fernet
 
 # ==== Setup ====
@@ -18,12 +19,7 @@ from cryptography.fernet import Fernet
 mail = imaplib.IMAP4_SSL('imap.gmail.com')
 
 # Setup cypher for email/password
-KEY = ''
-# TODO: Write this in a function (used in SystematicRat.py) also try catch
-# Maybe write a helpers class?
-with open('../key.txt', 'rt') as f:
-    KEY = f.read()
-    f.close()
+KEY = hp.open_file('../key.txt')
 
 cipher_suite = Fernet(KEY)
 

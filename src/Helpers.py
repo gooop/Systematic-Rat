@@ -11,11 +11,10 @@ Copyright 2023 Gavin Castaneda
 # ==== Includes ====
 
 class Helpers:
-
-
+    @staticmethod
     def open_file(filename):
+        """A simple function to return the contents of a file"""
         with open(filename, 'rt') as f:
-            """A simple function to return the contents of a file"""
             contents = f.read()
             f.close()
         return contents

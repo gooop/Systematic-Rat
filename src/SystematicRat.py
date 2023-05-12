@@ -1,4 +1,5 @@
 import discord
+from Helpers import Helpers as hp
 from discord.ext import commands
 import asyncio
 import os
@@ -10,10 +11,7 @@ def eprint(*args, **kwargs):
 
 # ==== Setup ====
 # Get token from current directory
-TOKEN = ''
-with open('../token.txt', 'rt') as f:
-    TOKEN = f.read()
-    f.close()
+TOKEN = hp.open_file('../token.txt')
 
 # Manage intents and connect to discord
 intents = discord.Intents.all()
