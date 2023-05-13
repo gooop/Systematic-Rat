@@ -58,14 +58,44 @@ class Email:
         
         return mailbox
 
-    def get_emails(self):
-        """Checks for, and returns a list of new emails"""
-        return []
+
+    def get_emails(self, mailbox):
+        """Checks for new emails
+        
+        Args:
+            mailbox (googleapiclient.discovery.Resource): the mailbox setup by the Gmail API
+
+        Returns:
+            dict: Dictionary of unread emails 
+        """
+        try:
+            # Get unread emails
+            emails = mailbox.users().messages().list(userId='me', q='is:unread').execute()
+            import pdb
+            pdb.set_trace()
+        except Exception as e:
+            print(f'Error in get_emails: {e}')
+        return emails
+    
+
+    def parse_emails(self, mailbox, emails):
+        """Parses a list of emails and returns author, subject, and contents
+        
+        Args:
+            mailbox (googleapiclient.discovery.Resource): the mailbox setup by the Gmail API
+            emails (dict): Dictionary of emails
+
+        Returns:
+            string: author string
+            string: subject string
+            string: contents string
+        """
 
 
 def main():
     email = Email()
-    list = email.get_emails()
+    mailbox = email.setup_mailbox()
+    unparsed_emails = email.get_emails(mailbox)
     
 
 if __name__ == '__main__':
