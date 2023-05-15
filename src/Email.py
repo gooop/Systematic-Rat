@@ -1,6 +1,6 @@
 """
-EMAILS:
-Integrates emails into Systematic Rat
+EMAILS CLASS:
+Class for connecting to gmail and extracting email contents.
 
 Originally written for Systematic Rat
 https://github.com/gooop/Systematic-Rat
@@ -28,7 +28,11 @@ class Email:
 
     # ==== Methods ====
     def setup_mailbox(self):
-        """Sets up credentials for Gmail API"""
+        """Sets up credentials for Gmail API
+        
+        Returns:
+            mailbox (googleapiclient.discovery.Resource): mailbox Resource built by Gmail API
+        """
         # Begin: Lifted from quickstart.py on https://developers.google.com/gmail/api/quickstart/python
         creds = None
         # The file token.json stores the user's access and refresh tokens, and is
@@ -55,6 +59,7 @@ class Email:
             mailbox = build('gmail', 'v1', credentials=creds)
         except HttpError as e:
             print(f'Error in setup_credentials: {e}')
+            raise HttpError
         
         return mailbox
 
@@ -66,36 +71,59 @@ class Email:
             mailbox (googleapiclient.discovery.Resource): the mailbox setup by the Gmail API
 
         Returns:
-            dict: Dictionary of unread emails 
+            emails (dict): Dictionary of unread emails 
         """
         try:
             # Get unread emails
             emails = mailbox.users().messages().list(userId='me', q='is:unread').execute()
-            import pdb
-            pdb.set_trace()
         except Exception as e:
             print(f'Error in get_emails: {e}')
+            raise Exception
         return emails
     
 
-    def parse_emails(self, mailbox, emails):
+    def parse_emails(self, mailbox, emails, read=True):
         """Parses a list of emails and returns author, subject, and contents
         
         Args:
             mailbox (googleapiclient.discovery.Resource): the mailbox setup by the Gmail API
-            emails (dict): Dictionary of emails
+            emails (dict): Dictionary of email ids returned by get_emails
+            read (bool): Flag to decide whether to mark emails as read
 
         Returns:
-            string: author string
-            string: subject string
-            string: contents string
+            parsed_emails (list of dicts): List of emails (dict) that contains author, subject, and contents.
         """
+        # Pull message ids out of email 
+        email_ids = [msg['id'] for msg in emails.get('messages', [])]
+
+        # The actual content of the emails (to, from, subject, message, etc.)
+        emails_meat = []
+        for email_id in email_ids:
+            email_meat = mailbox.users().messages().get(userId='me', id=email_id).execute()
+            emails_meat.append(email_meat)
+        
+   
+        # Get subject
+        parsed_emails = []
+        for email in emails_meat:
+            headers = email['payload']['headers']
+            author = [header['value'] for header in headers if header['name'] == 'From'][0]
+            subject = [header['value'] for header in headers if header['name'] == 'Subject'][0]
+            import pdb
+            pdb.set_trace()
+            #TODO: Maybe render contents out to pdf? Check pdfkit (pdfkit.from_file, or other method might work)
+            #contents = 
+        
+
+
+
 
 
 def main():
     email = Email()
     mailbox = email.setup_mailbox()
     unparsed_emails = email.get_emails(mailbox)
+    parsed_emails = email.parse_emails(mailbox, unparsed_emails)
     
 
 if __name__ == '__main__':
