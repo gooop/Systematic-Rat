@@ -1,5 +1,5 @@
 ### SpotifyRat
-### Logan Lies and Gavin Castaneda
+### Logan L and Gavin C
 ### Started 5/15/2023
 
 # Imports
