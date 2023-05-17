@@ -1,4 +1,16 @@
+"""
+SYSTEMATIC RAT:
+A discord bot that is written for the rats discord server
+
+Originally written for Systematic Rat
+https://github.com/gooop/Systematic-Rat
+
+Copyright 2023 Gavin Castaneda
+"""
+
+# ==== Includes ====
 import discord
+from Helpers import Helpers as hp
 from discord.ext import commands
 import asyncio
 import os
@@ -10,10 +22,11 @@ def eprint(*args, **kwargs):
 
 # ==== Setup ====
 # Get token from current directory
-TOKEN = ''
-with open('../token.txt', 'rt') as f:
-    TOKEN = f.read()
-    f.close()
+try:
+    TOKEN = hp.open_file('../token.txt')
+except Exception as e:
+    print(f"Error getting token: {e} \n You may need to make a token.txt.")
+    exit(-1)
 
 # Manage intents and connect to discord
 intents = discord.Intents.all()
@@ -27,7 +40,7 @@ async def on_ready():
         print(f'\t{guild.name} (id: {guild.id})')
 
 
-# ==== Import cogs ====
+# ==== Cog Methods ====
 async def load_cogs():
     for filename in os.listdir('./cogs'):
         if filename.endswith('.py'):
@@ -37,6 +50,28 @@ async def load_cogs():
             except Exception as e:
                 eprint(f'- Failed to load cog: {filename[:-3]}')
                 eprint(e)
+
+
+async def unload_cogs():
+    for filename in os.listdir('./cogs'):
+        if filename.endswith('.py'):
+            try:
+                await bot.unload_extension(f'cogs.{filename[:-3]}')
+                print(f'- Unloaded cog: {filename[:-3]}')
+            except Exception as e:
+                eprint(f'- Failed to unload cog: {filename[:-3]}')
+                eprint(e)
+
+
+@bot.command(name='reload_cogs',
+                    help='Reloads cogs/extensions.',
+                    hidden=True,
+                    brief='Reloads cogs/extensions.')
+async def reload_cogs(context):
+    #TODO: Permissions check
+    await unload_cogs()
+    await load_cogs()
+    await context.send('Cogs reloaded.')
 
 
 # ==== Main ====
