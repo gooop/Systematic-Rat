@@ -105,8 +105,15 @@ class Email:
             headers = email['payload']['headers']
             author = [header['value'] for header in headers if header['name'] == 'From'][0]
             subject = [header['value'] for header in headers if header['name'] == 'Subject'][0]
-            import pdb
-            pdb.set_trace()
+
+            email_dict = dict()
+            email_dict['author'] = author
+            email_dict['subject'] = subject
+
+            parsed_emails.append(email_dict)
+            return parsed_emails
+            #import pdb
+            #pdb.set_trace()
             #TODO: Maybe render contents out to pdf? Check pdfkit (pdfkit.from_file, or other method might work)
             #contents = 
         
