@@ -25,6 +25,8 @@ class Utils(commands.Cog):
                 help='Systematic rat is here to help!',
                 brief='Says hello.')
     async def hello(self, context):
+        author = context.message.author
+        print(f'- [Utils] !hello called by {author}')
         await context.send("Hello, ratlings! I am here to take your jobs.")
 
 
