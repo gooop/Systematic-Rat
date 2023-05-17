@@ -1,3 +1,14 @@
+"""
+SYSTEMATIC RAT:
+A discord bot that is written for the rats discord server
+
+Originally written for Systematic Rat
+https://github.com/gooop/Systematic-Rat
+
+Copyright 2023 Gavin Castaneda
+"""
+
+# ==== Includes ====
 import discord
 from Helpers import Helpers as hp
 from discord.ext import commands

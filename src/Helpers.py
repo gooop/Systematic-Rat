@@ -11,8 +11,9 @@ Copyright 2023 Gavin Castaneda
 # ==== Includes ====
 from cryptography.fernet import Fernet
 
-
+# ==== Class ====
 class Helpers:
+    # ==== Static Methods ====
     @staticmethod
     def open_file(filename):
         """A simple function to return the contents of a file"""

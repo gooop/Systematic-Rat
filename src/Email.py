@@ -17,7 +17,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-
+# ==== Class ====
 class Email:
     # ==== Init ====
     def __init__(self):
@@ -114,9 +114,6 @@ class Email:
             #TODO: Maybe render contents out to pdf? Check pdfkit (pdfkit.from_file, or other method might work)
             #contents = 
         
-
-
-
 
 
 def main():

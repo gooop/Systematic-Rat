@@ -1,12 +1,25 @@
+"""
+UTILS COG:
+A discord bot Cog that contains useful commands
+
+Originally written for Systematic Rat
+https://github.com/gooop/Systematic-Rat
+
+Copyright 2023 Gavin Castaneda
+"""
+
+# ==== Includes ====
 import discord
 from discord.ext import commands     
 import typing
 
+# ==== Cog ====
 class Utils(commands.Cog):
+    # ==== Init ====
     def __init__(self, bot):
         self.bot = bot
 
-
+    # ==== Commands ====
     @commands.command(name='hello',
                 help='Systematic rat is here to help!',
                 brief='Says hello.')
@@ -142,5 +155,6 @@ class Utils(commands.Cog):
         await msg.add_reaction("🇫")
 
 
+# ==== Setup ====
 async def setup(bot):
     await bot.add_cog(Utils(bot))
