@@ -19,6 +19,7 @@ class Utils(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+
     # ==== Commands ====
     @commands.command(name='hello',
                 help='Systematic rat is here to help!',
