@@ -15,5 +15,14 @@ import Email
 
 # ==== Class ====
 class Email(commands.Cog):
+    # ==== Init ====
     def __init__(self):
         pass
+
+
+    # ==== Tasks ====
+    @tasks.loop(minutes=5.0)
+    async def check_email(self):
+        """Checks email every 5 minutes"""
+        pass
+        # TODO: Check email stuff here
