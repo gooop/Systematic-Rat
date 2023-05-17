@@ -21,13 +21,13 @@ from googleapiclient.errors import HttpError
 class Email:
     # ==== Init ====
     def __init__(self):
-        self.setup_mailbox()
+        self._mailbox = self._setup_mailbox()
 
     # ==== Member Variables ====
     SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
 
     # ==== Methods ====
-    def setup_mailbox(self):
+    def _setup_mailbox(self):
         """Sets up credentials for Gmail API
         
         Returns:
@@ -64,29 +64,25 @@ class Email:
         return mailbox
 
 
-    def get_emails(self, mailbox):
+    def get_emails(self):
         """Checks for new emails
-        
-        Args:
-            mailbox (googleapiclient.discovery.Resource): the mailbox setup by the Gmail API
 
         Returns:
             emails (dict): Dictionary of unread emails 
         """
         try:
             # Get unread emails
-            emails = mailbox.users().messages().list(userId='me', q='is:unread').execute()
+            emails = self._mailbox.users().messages().list(userId='me', q='is:unread').execute()
         except Exception as e:
             print(f'Error in get_emails: {e}')
             raise Exception
         return emails
     
 
-    def parse_emails(self, mailbox, emails, read=True):
+    def parse_emails(self, emails, read=True):
         """Parses a list of emails and returns author, subject, and contents
         
         Args:
-            mailbox (googleapiclient.discovery.Resource): the mailbox setup by the Gmail API
             emails (dict): Dictionary of email ids returned by get_emails
             read (bool): Flag to decide whether to mark emails as read
 
@@ -99,7 +95,7 @@ class Email:
         # The actual content of the emails (to, from, subject, message, etc.)
         emails_meat = []
         for email_id in email_ids:
-            email_meat = mailbox.users().messages().get(userId='me', id=email_id).execute()
+            email_meat = self._mailbox.users().messages().get(userId='me', id=email_id).execute()
             emails_meat.append(email_meat)
         
    
@@ -116,12 +112,12 @@ class Email:
         
 
 
-def main():
-    email = Email()
-    mailbox = email.setup_mailbox()
-    unparsed_emails = email.get_emails(mailbox)
-    parsed_emails = email.parse_emails(mailbox, unparsed_emails)
+# def main():
+#     email = Email()
+#     mailbox = email.setup_mailbox()
+#     unparsed_emails = email.get_emails(mailbox)
+#     parsed_emails = email.parse_emails(mailbox, unparsed_emails)
     
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
