@@ -16,7 +16,13 @@ class Helpers:
     # ==== Static Methods ====
     @staticmethod
     def open_file(filename):
-        """A simple function to return the contents of a file"""
+        """A simple function to return the contents of a file
+        
+        Args:
+            filename (str): the filename to read
+
+        Returns:
+            contents (str): The contents of the file read"""
         try:
             with open(filename, 'rt') as f:
                 contents = f.read()
@@ -28,7 +34,12 @@ class Helpers:
     
     @staticmethod
     def write_file(filename, contents, overwrite=True):
-        """A simple function to write to a file"""
+        """A simple function to write to a file
+        
+        Args:
+            filename (str): the filename to write to
+            contents (str): The contents of the file write
+        """
         if overwrite:
             try:
                 with open(filename, 'wb') as f:
