@@ -58,7 +58,7 @@ class Email:
             # Call the Gmail API
             mailbox = build('gmail', 'v1', credentials=creds)
         except HttpError as e:
-            print(f'Error in setup_credentials: {e}')
+            print(f'Error in setup_mailbox: {e}')
             raise HttpError
         
         return mailbox
