@@ -65,8 +65,8 @@ class Email:
         return mailbox
 
 
-    async def get_emails(self):
-        """Checks for new emails
+    async def get_emails(self, mark_read=False):
+        """Checks for new emails and mark them as read
 
         Returns:
             emails (dict): Dictionary of unread emails 
@@ -74,6 +74,10 @@ class Email:
         try:
             # Get unread emails
             emails = self._mailbox.users().messages().list(userId='me', q='is:unread').execute()
+
+            if mark_read:
+                pass
+
         except Exception as e:
             print(f'Error in get_emails: {e}')
             raise Exception
@@ -108,7 +112,6 @@ class Email:
             headers = payload['headers']
             author = [header['value'] for header in headers if header['name'] == 'From'][0]
             subject = [header['value'] for header in headers if header['name'] == 'Subject'][0]
-
 
             if 'parts' in payload:
                 for part in payload['parts']:
