@@ -15,6 +15,10 @@ from cryptography.fernet import Fernet
 class Helpers:
     # ==== Static Methods ====
     @staticmethod
+    def eprint(*args, **kwargs):
+        print(*args, file=sys.stderr, **kwargs)
+
+    @staticmethod
     def open_file(filename):
         """A simple function to return the contents of a file
         
@@ -32,6 +36,7 @@ class Helpers:
             raise e
         return contents
     
+
     @staticmethod
     def write_file(filename, contents, overwrite=True):
         """A simple function to write to a file
@@ -60,3 +65,16 @@ class Helpers:
             except Exception as e:
                 print(f"Error in write_file: {e}")
                 raise e
+
+     
+    @staticmethod
+    def sanitize(contents):
+        """A simple function to write to a file
+        
+        Args:
+            contents (str): the filename to write to
+
+        Returns:
+            sanitized (str): The contents of the file read"""
+        sanitized = ''
+        return sanitized
