@@ -16,6 +16,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import base64
 
 # ==== Class ====
 class Email:
@@ -64,7 +65,7 @@ class Email:
         return mailbox
 
 
-    def get_emails(self):
+    async def get_emails(self):
         """Checks for new emails
 
         Returns:
@@ -79,7 +80,7 @@ class Email:
         return emails
     
 
-    def parse_emails(self, emails, read=True):
+    async def parse_emails(self, emails, read=True):
         """Parses a list of emails and returns author, subject, and contents
         
         Args:
@@ -102,29 +103,24 @@ class Email:
         # Get subject
         parsed_emails = []
         for email in emails_meat:
-            headers = email['payload']['headers']
+            # Grab author and subject
+            payload = email['payload']
+            headers = payload['headers']
             author = [header['value'] for header in headers if header['name'] == 'From'][0]
             subject = [header['value'] for header in headers if header['name'] == 'Subject'][0]
+
+
+            if 'parts' in payload:
+                for part in payload['parts']:
+                    if part['mimeType'] == 'text/plain':
+                        body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
 
             email_dict = dict()
             email_dict['author'] = author
             email_dict['subject'] = subject
+            email_dict['body'] = body
 
             parsed_emails.append(email_dict)
-            return parsed_emails
-            #import pdb
-            #pdb.set_trace()
-            #TODO: Maybe render contents out to pdf? Check pdfkit (pdfkit.from_file, or other method might work)
-            #contents = 
         
-
-
-# def main():
-#     email = Email()
-#     mailbox = email.setup_mailbox()
-#     unparsed_emails = email.get_emails(mailbox)
-#     parsed_emails = email.parse_emails(mailbox, unparsed_emails)
-    
-
-# if __name__ == '__main__':
-#     main()
+        # Return
+        return parsed_emails
