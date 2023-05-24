@@ -59,7 +59,7 @@ class Email:
             # Call the Gmail API
             mailbox = build('gmail', 'v1', credentials=creds)
         except HttpError as e:
-            print(f'Error in setup_mailbox: {e}')
+            hp.eprint(f'Error in setup_mailbox: {e}')
             raise HttpError
         
         return mailbox
@@ -76,7 +76,7 @@ class Email:
             emails = self._mailbox.users().messages().list(userId='me', q='is:unread').execute()
 
         except Exception as e:
-            print(f'Error in get_emails: {e}')
+            hp.eprint(f'Error in get_emails: {e}')
             raise Exception
         return emails
     
@@ -107,7 +107,7 @@ class Email:
                 batch.add(self._mailbox.users().messages().modify(userId='me', id=email_id, body={'removeLabelIds': ['UNREAD']}))
                 batch.execute()
    
-        # Get subject
+        # Get contents of email
         parsed_emails = []
         for email in emails_meat:
             # Grab author and subject
@@ -116,17 +116,30 @@ class Email:
             author = [header['value'] for header in headers if header['name'] == 'From'][0]
             subject = [header['value'] for header in headers if header['name'] == 'Subject'][0]
 
+            # Get body
             if 'parts' in payload:
                 for part in payload['parts']:
                     if part['mimeType'] == 'text/plain':
                         body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
 
+            # Make a dict
             email_dict = dict()
             email_dict['author'] = author
             email_dict['subject'] = subject
             email_dict['body'] = body
 
+            # Append to dict
             parsed_emails.append(email_dict)
+
+            # # Download attachments
+            # try:
+            #     if 'attachmentId' in body:
+            #         attachment = self._mailbox.users().messages().attachments().get(
+            #             userId='me', messageId=email, id=body['attachmentId']).execute()
+            # except Exception as e:
+            #     hp.eprint(f'Failed to download attachments: {e}')
+
+        
         
         # Return
         return parsed_emails
