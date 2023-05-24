@@ -25,7 +25,7 @@ class Email:
         self._mailbox = self._setup_mailbox()
 
     # ==== Member Variables ====
-    SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+    SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
 
     # ==== Methods ====
     def _setup_mailbox(self):
@@ -65,7 +65,7 @@ class Email:
         return mailbox
 
 
-    async def get_emails(self, mark_read=False):
+    async def get_emails(self):
         """Checks for new emails and mark them as read
 
         Returns:
@@ -75,16 +75,13 @@ class Email:
             # Get unread emails
             emails = self._mailbox.users().messages().list(userId='me', q='is:unread').execute()
 
-            if mark_read:
-                pass
-
         except Exception as e:
             print(f'Error in get_emails: {e}')
             raise Exception
         return emails
     
 
-    async def parse_emails(self, emails, read=True):
+    async def parse_emails(self, emails, mark_read=True):
         """Parses a list of emails and returns author, subject, and contents
         
         Args:
@@ -102,7 +99,13 @@ class Email:
         for email_id in email_ids:
             email_meat = self._mailbox.users().messages().get(userId='me', id=email_id).execute()
             emails_meat.append(email_meat)
-        
+
+        # Mark emails as read
+        if mark_read:
+            batch = self._mailbox.new_batch_http_request()
+            for email_id in email_ids:
+                batch.add(self._mailbox.users().messages().modify(userId='me', id=email_id, body={'removeLabelIds': ['UNREAD']}))
+                batch.execute()
    
         # Get subject
         parsed_emails = []
