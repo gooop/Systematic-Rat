@@ -12,6 +12,7 @@ Copyright 2023 Gavin Castaneda
 # ==== Includes ====
 from discord.ext import tasks, commands
 from Email import Email as EmailClass
+import typing
 
 # ==== Class ====
 class Email(commands.Cog):
@@ -20,10 +21,23 @@ class Email(commands.Cog):
         self.bot = bot
         self.mailbox = EmailClass()
         self.parsed_emails = []
+        self.thread_ids = []
 
 
     # ==== Methods ====
-    async def print_emails(self, context):
+    async def send_to_threads(self, message):
+        """Prints message in all threads that have been added to thread_ids
+        
+        Args:
+            message (str): message to send"""
+        print(f'- [Email] send_to_threads called.')
+        for thread_id in self.thread_ids:
+            thread = await self.bot.fetch_channel(thread_id)
+            await thread.send(message)
+
+    @tasks.loop(minutes=5.0)
+    async def print_emails(self):
+        """Paginates, then calls send_to_threads to print emails in all threads added to thread_ids."""
         print(f'- [Email] print_emails called.')
         if self.parsed_emails is not None:
             for email in self.parsed_emails:
@@ -35,37 +49,41 @@ class Email(commands.Cog):
                             pages = int(len(sendString) / message_length)
                             for i in range(pages):
                                 if i == 0:
-                                    await context.send(f"{sendString[0:message_length]} \n ``` ({i + 1}/{pages})") 
+                                    await self.send_to_threads(f"{sendString[0:message_length]} \n ``` ({i + 1}/{pages})") 
                                 elif i != pages:
-                                    await context.send(f"``` {sendString[message_length * i:(message_length * i) + message_length]} \n ``` ({i + 1}/{pages})")
+                                    await self.send_to_threads(f"``` {sendString[message_length * i:(message_length * i) + message_length]} \n ``` ({i + 1}/{pages})")
                                 else:
-                                    await context.send(f"``` {sendString[message_length * i:]} \n ``` ({i + 1}/{pages})")
+                                    await self.send_to_threads(f"``` {sendString[message_length * i:]} \n ``` ({i + 1}/{pages})")
 
                     except Exception as e:
                         print(f"- [Email] failed to paginate message more than 2000 chars: {e}")
 
                 else:
                     try:
-                        await context.send(sendString)
+                        await self.send_to_threads(sendString)
                     except Exception as e:
                         print(f"- [Email] failed to send message less than 2000 chars: {e}")
 
 
         else:
-            await context.send(f"No emails found.")
+            print(f'- [Email] no emails to send.')
+            #await context.send(f"No emails found.")
+        
+        # Clear emails now that they've been printed.
+        self.parsed_emails = []
 
 
     # ==== Tasks ====
-    @tasks.loop(minutes=5.0)
-    async def check_email(self, mark_read=False):
-        """Checks email every 5 minutes"""
+    @tasks.loop(minutes=2.5)
+    async def check_email(self, mark_read=True):
+        """Checks email every 2.5 minutes"""
         #TODO: logging levels
         print(f'- [Email] check_email called.')
 
         # Get unread emails
-        self.emails = await self.mailbox.get_emails(mark_read)
-        self.parsed_emails = await self.mailbox.parse_emails(self.emails)
-
+        self.emails = await self.mailbox.get_emails()
+        self.parsed_emails = await self.mailbox.parse_emails(self.emails, mark_read)
+        
 
     # ==== Commands ====
     @commands.command(name='setup_email',
@@ -73,20 +91,31 @@ class Email(commands.Cog):
                 help='Starts email checking task. Must be run for emails to be checked every 5 minutes.',
                 brief='Starts email checking task.')
     async def email_setup(self, context):
+        """Begins timers for timed methods and adds threads from callers to thread_ids."""
         author = context.message.author
-        print(f'- [Email] !email_setup called by {author}')
-        await context.send("Begin checking for emails...")
+        print(f'- [Email] !setup_email called by {author}')
+        await context.message.delete()
+
+        # Add thread to list of threads to send emails to
+        thread_id = context.channel.id
+        self.thread_ids.append(thread_id)
+        print(f'- [Email] thread id {thread_id} added to list of threads.')
+
+        # Start timers and tell server success
+        await context.send("Success! I am going to begin checking for and printing emails...")
         self.check_email.start()
+        self.print_emails.start()
 
 
     @commands.command(name='checkemails',
                 help='Forces bot to check emails',
                 brief='Forces bot to check emails')
-    async def checkemails(self, context):
+    async def checkemails(self, context, 
+                          mark_read : typing.Optional[bool],):
         author = context.message.author
         print(f'- [Email] !checkemails called by {author}')
         await context.send("Checking emails...")
-        await self.check_email()
+        await self.check_email(mark_read)
     
 
     @commands.command(name='printemails',
@@ -96,10 +125,8 @@ class Email(commands.Cog):
         author = context.message.author
         print(f'- [Email] !printemails called by {author}')
         await context.send("Printing emails...")
-        await self.print_emails(context)
+        await self.print_emails()
     
-
-
 
 # ==== Setup ====
 async def setup(bot):
