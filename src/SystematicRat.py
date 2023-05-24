@@ -68,28 +68,6 @@ async def reload_cogs(context):
     await context.send('Cogs reloaded.')
 
 
-async def unload_cogs():
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            try:
-                await bot.unload_extension(f'cogs.{filename[:-3]}')
-                print(f'- Unloaded cog: {filename[:-3]}')
-            except Exception as e:
-                eprint(f'- Failed to unload cog: {filename[:-3]}')
-                eprint(e)
-
-
-@bot.command(name='reload_cogs',
-                    help='Reloads cogs/extensions.',
-                    hidden=True,
-                    brief='Reloads cogs/extensions.')
-async def reload_cogs(context):
-    #TODO: Permissions check
-    await unload_cogs()
-    await load_cogs()
-    await context.send('Cogs reloaded.')
-
-
 # ==== Main ====
 async def main():
     await load_cogs()
