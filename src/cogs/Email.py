@@ -102,7 +102,9 @@ class Email(commands.Cog):
         print(f'- [Email] thread id {thread_id} added to list of threads.')
 
         # Start timers and tell server success
-        await context.send("Success! I am going to begin checking for and printing emails...")
+        #await context.send("Success! I am going to begin checking for and printing emails...")
+        #TODO: Before pull request, uncomment above and delete below line (this is for silent testing while live)
+        print("Success! I am going to begin checking for and printing emails...")
         self.check_email.start()
         self.print_emails.start()
 
