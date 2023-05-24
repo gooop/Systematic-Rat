@@ -1,27 +1,12 @@
-"""
-FUN COG:
-A discord bot Cog that contains silly commands
-
-Originally written for Systematic Rat
-https://github.com/gooop/Systematic-Rat
-
-Copyright 2023 Gavin Castaneda
-"""
-
-# ==== Includes ====
 import discord
 from discord.ext import commands     
 import random
 
-
-# ==== Cog ====
 class Fun(commands.Cog):
-    # ==== Init ====
     def __init__(self, bot):
         self.bot = bot
 
 
-    # ==== Commands ====
     @commands.command(name='ratspin',
                     help='Uploads an image of a spinning rat or falls back onto pasting a URL',
                     brief='SPEEN')
@@ -75,6 +60,5 @@ class Fun(commands.Cog):
                 await context.send('Error: Rat could not finish')
 
 
-# ==== Setup ====
 async def setup(bot):
     await bot.add_cog(Fun(bot))
