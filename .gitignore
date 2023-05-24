@@ -1,11 +1,14 @@
+# Bot stuff
 token.txt
-key.txt
-email.txt
-email_token.txt
-credentials.json
-token.json
-*.bak
 Top_Rat.jpg
 Bottom_Rat.jpg
 Chad_Rat.png
+
+# Email stuff
+credentials.json
+temp
+token.json
+
+# Misc python/git stuff
+*.bak
 __pycache__
