@@ -16,6 +16,10 @@ import asyncio
 import os
 import sys
 
+# ==== Helpers ====
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 # ==== Setup ====
 # Get token from current directory
 try:
@@ -44,28 +48,8 @@ async def load_cogs():
                 await bot.load_extension(f'cogs.{filename[:-3]}')
                 print(f'- Loaded cog: {filename[:-3]}')
             except Exception as e:
-                hp.eprint(f'- Failed to load cog: {filename[:-3]}: {e}')
-
-
-async def unload_cogs():
-    for filename in os.listdir('./cogs'):
-        if filename.endswith('.py'):
-            try:
-                await bot.unload_extension(f'cogs.{filename[:-3]}')
-                print(f'- Unloaded cog: {filename[:-3]}')
-            except Exception as e:
-                hp.eprint(f'- Failed to unload cog: {filename[:-3]} : {e}')
-
-
-@bot.command(name='reload_cogs',
-                    help='Reloads cogs/extensions.',
-                    hidden=True,
-                    brief='Reloads cogs/extensions.')
-async def reload_cogs(context):
-    #TODO: Permissions check
-    await unload_cogs()
-    await load_cogs()
-    await context.send('Cogs reloaded.')
+                eprint(f'- Failed to load cog: {filename[:-3]}')
+                eprint(e)
 
 
 async def unload_cogs():
