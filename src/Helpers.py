@@ -10,6 +10,7 @@ Copyright 2023 Gavin Castaneda
 
 # ==== Includes ====
 from cryptography.fernet import Fernet
+import sys
 
 # ==== Class ====
 class Helpers:

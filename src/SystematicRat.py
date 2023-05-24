@@ -14,7 +14,6 @@ from Helpers import Helpers as hp
 from discord.ext import commands
 import asyncio
 import os
-import sys
 
 # ==== Setup ====
 # Get token from current directory
