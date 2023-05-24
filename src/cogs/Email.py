@@ -82,7 +82,7 @@ class Email(commands.Cog):
 
         # Get unread emails
         self.emails = await self.mailbox.get_emails()
-        self.parsed_emails = await self.mailbox.parse_emails(self.emails, mark_read)
+        self.parsed_emails.append(await self.mailbox.parse_emails(self.emails, mark_read))
         
 
     # ==== Commands ====
