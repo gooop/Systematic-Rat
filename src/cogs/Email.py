@@ -67,7 +67,6 @@ class Email(commands.Cog):
 
         else:
             print(f'- [Email] no emails to send.')
-            #await context.send(f"No emails found.")
         
         # Clear emails now that they've been printed.
         self.parsed_emails = []
