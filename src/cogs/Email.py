@@ -39,35 +39,34 @@ class Email(commands.Cog):
     async def print_emails(self):
         """Paginates, then calls send_to_threads to print emails in all threads added to thread_ids."""
         print(f'- [Email] print_emails called.')
-        if self.parsed_emails is not None:
-            for email in self.parsed_emails:
-                sendString = "📧 New email! 📧\n > Author: " + email['author'] + " \n > Subject: " + email['subject'] + "\n```" + email['body'] + "```"
+        if self.parsed_emails != []:
+            try:
+                for email in self.parsed_emails:
+                    email = email[0]
+                    # TODO: handle empty fields better
+                    sendString = "📧 New email! 📧\n > Author: " + email['author'] + " \n > Subject: " + email['subject'] + "\n```" + email['body'] + "```"
+                    if len(sendString) > 2000:
+                        try:
+                                message_length = 2000 - 19 # 19 is len("``` \n ``` (100/100)")
+                                pages = int(len(sendString) / message_length)
+                                for i in range(pages):
+                                    if i == 0:
+                                        await self.send_to_threads(f"{sendString[0:message_length]} \n ``` ({i + 1}/{pages})") 
+                                    elif i != pages:
+                                        await self.send_to_threads(f"``` {sendString[message_length * i:(message_length * i) + message_length]} \n ``` ({i + 1}/{pages})")
+                                    else:
+                                        await self.send_to_threads(f"``` {sendString[message_length * i:]} \n ``` ({i + 1}/{pages})")
 
-                if len(sendString) > 2000:
-                    try:
-                            message_length = 2000 - 19 # 19 is len("``` \n ``` (100/100)")
-                            pages = int(len(sendString) / message_length)
-                            for i in range(pages):
-                                if i == 0:
-                                    await self.send_to_threads(f"{sendString[0:message_length]} \n ``` ({i + 1}/{pages})") 
-                                elif i != pages:
-                                    await self.send_to_threads(f"``` {sendString[message_length * i:(message_length * i) + message_length]} \n ``` ({i + 1}/{pages})")
-                                else:
-                                    await self.send_to_threads(f"``` {sendString[message_length * i:]} \n ``` ({i + 1}/{pages})")
+                        except Exception as e:
+                            print(f"- [Email] failed to paginate message more than 2000 chars: {e}")
 
-                    except Exception as e:
-                        print(f"- [Email] failed to paginate message more than 2000 chars: {e}")
-
-                else:
-                    try:
-                        await self.send_to_threads(sendString)
-                    except Exception as e:
-                        print(f"- [Email] failed to send message less than 2000 chars: {e}")
-
-
-        else:
-            print(f'- [Email] no emails to send.')
-            #await context.send(f"No emails found.")
+                    else:
+                        try:
+                            await self.send_to_threads(sendString)
+                        except Exception as e:
+                            print(f"- [Email] failed to send message less than 2000 chars: {e}")
+            except Exception as e:
+                            print(f"- [Email] Couldn't convert email to string: {e}")
         
         # Clear emails now that they've been printed.
         self.parsed_emails = []

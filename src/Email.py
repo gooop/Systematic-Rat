@@ -117,16 +117,27 @@ class Email:
             subject = [header['value'] for header in headers if header['name'] == 'Subject'][0]
 
             # Get body
+            body = None
             if 'parts' in payload:
                 for part in payload['parts']:
                     if part['mimeType'] == 'text/plain':
                         body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
 
             # Make a dict
+            #TODO: handle empty fields better
             email_dict = dict()
-            email_dict['author'] = author
-            email_dict['subject'] = subject
-            email_dict['body'] = body
+            if author:
+                email_dict['author'] = author
+            else:
+                email_dict['author'] = ' '
+            if subject:
+                email_dict['subject'] = subject
+            else:
+                email_dict['subject'] = ' '
+            if body:
+                email_dict['body'] = body
+            else:
+                email_dict['body'] = ' '
 
             # Append to dict
             parsed_emails.append(email_dict)
@@ -139,7 +150,19 @@ class Email:
             # except Exception as e:
             #     hp.eprint(f'Failed to download attachments: {e}')
 
-        
-        
         # Return
         return parsed_emails
+    
+
+# def main():
+#     email = Email()
+#     # mailbox = email._setup_mailbox()
+#     unparsed_emails = email.get_emails()
+#     parsed_emails = email.parse_emails(unparsed_emails)
+#     import pdb
+#     pdb.set_trace()
+    
+
+# if __name__ == '__main__':
+#     main()
+
