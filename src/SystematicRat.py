@@ -5,12 +5,12 @@ A discord bot that is written for the rats discord server
 Originally written for Systematic Rat
 https://github.com/gooop/Systematic-Rat
 
-Copyright 2023 Gavin Castaneda
+Copyright 2025 Gavin Castaneda
 """
 
 # ==== Includes ====
 import discord
-from Helpers import Helpers as hp
+import Helpers as hp
 from discord.ext import commands
 import asyncio
 import os
@@ -21,6 +21,12 @@ try:
     TOKEN = hp.open_file('../token.txt')
 except Exception as e:
     print(f"Error getting token: {e} \n You may need to make a token.txt.")
+    exit(-1)
+
+try:
+    ADMIN_ID = hp.open_file('../admin_id.txt')
+except Exception as e:
+    print(f"Error getting admin ID: {e} \n You may need to make an admin_id.txt.")
     exit(-1)
 
 # Manage intents and connect to discord
@@ -61,7 +67,13 @@ async def unload_cogs():
                     hidden=True,
                     brief='Reloads cogs/extensions.')
 async def reload_cogs(context):
-    #TODO: Permissions check
+    author = context.message.author
+    print(f'- [SystematicRat] !reload_cogs called by {author}')
+
+    if (str(author.id) != ADMIN_ID):
+        print("Called by an unauthorized user, aborting")
+        return
+    
     await unload_cogs()
     await load_cogs()
     await context.send('Cogs reloaded.')

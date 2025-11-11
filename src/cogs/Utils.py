@@ -5,13 +5,13 @@ A discord bot Cog that contains useful commands
 Originally written for Systematic Rat
 https://github.com/gooop/Systematic-Rat
 
-Copyright 2023 Gavin Castaneda
+Copyright 2025 Gavin Castaneda
 """
 
 # ==== Includes ====
-import discord
 from discord.ext import commands     
 import typing
+import Helpers as hp
 
 # ==== Cog ====
 class Utils(commands.Cog):
@@ -42,7 +42,7 @@ class Utils(commands.Cog):
         # Delete command from user and log
         author = context.message.author
         print(f'- [Utils] !announce called by {author}')
-        await context.message.delete()
+        await hp.try_delete_message(context)
 
         # Blank message error
         if message == '':
@@ -71,7 +71,7 @@ class Utils(commands.Cog):
         # Delete command from user and log
         author = context.message.author
         print(f'- [Utils] !multipoll called by {author}')
-        await context.message.delete()
+        await hp.try_delete_message(context)
 
         # Blank message error
         if message == '':
@@ -103,7 +103,7 @@ class Utils(commands.Cog):
         # Delete command from user and log
         author = context.message.author
         print(f'- [Utils] !poll called by {author}')
-        await context.message.delete()
+        await hp.try_delete_message(context)
         
         # Blank message error
         if message == '':
@@ -135,7 +135,7 @@ class Utils(commands.Cog):
         # Delete command from user and log
         author = context.message.author
         print(f'- [Utils] !schedule called by {author}')
-        await context.message.delete()
+        await hp.try_delete_message(context)
         
         # Blank message error
         if message == '':

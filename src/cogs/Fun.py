@@ -5,14 +5,13 @@ A discord bot Cog that contains silly commands
 Originally written for Systematic Rat
 https://github.com/gooop/Systematic-Rat
 
-Copyright 2023 Gavin Castaneda
+Copyright 2025 Gavin Castaneda
 """
 
 # ==== Includes ====
 import discord
 from discord.ext import commands     
-import random
-
+import Helpers as hp
 
 # ==== Cog ====
 class Fun(commands.Cog):
@@ -29,8 +28,7 @@ class Fun(commands.Cog):
         # Delete command from user and log
         author = context.message.author
         print(f'- [Fun] !ratspin called by {author}')
-        author = str(author).split('#')[0]
-        await context.message.delete()
+        await hp.try_delete_message(context)
 
         # Try to upload, if that fails, paste URL
         try:
